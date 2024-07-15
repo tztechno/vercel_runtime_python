@@ -13,8 +13,3 @@ git push -u origin main
 
 git push -f origin main　強制
 
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/tztechno/vercel_runtime_python
-git push -u origin main
