@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Function Execution Time Calculator</title>
+</head>
+
+<body>
+    <h1>Function Execution Time Calculator</h1>
+    <p>Define your function:</p>
+    <textarea id="functionCode" rows="10" cols="50">
+n = int(input())
+print(n*n)
+    </textarea>
+    <p>Enter your input (multiple lines allowed):</p>
+    <textarea id="inputData" rows="5" cols="50" placeholder="Enter input data"></textarea>
+    <button onclick="sendRequest()">Calculate</button><br><br>
+    <div id="inputDisplay"></div>
+    <div id="result"></div>
+    <div id="time"></div>
+    <div id="error" style="color: red;"></div>
+
+    <script>
+        function sendRequest() {
+            const inputData = document.getElementById('inputData').value;
+            const functionCode = document.getElementById('functionCode').value;
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ inputData, functionCode })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('error').innerText = `Error: ${data.error}`;
+                    } else {
+                        document.getElementById('inputDisplay').innerText = `Input:\n${data.inputData}`;
+                        document.getElementById('result').innerText = `Result:\n${data.result}`;
+                        document.getElementById('time').innerText = `Time: ${(data.process_time / 1000).toFixed(3)} sec`;
+                        document.getElementById('error').innerText = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('error').innerText = `Error: ${error}`;
+                });
+        }
+    </script>
+</body>
+
+</html>
