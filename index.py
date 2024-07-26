@@ -72,8 +72,10 @@ def calculate():
         session['result'] = str(e)
         session['process_time'] = (time.time() - start_time) * 1000
         return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 400
-
-    return jsonify(session)
+    
+    end_time = time.time()
+    process_time = (end_time - start_time) * 1000  # in milliseconds
+    return jsonify({'inputData': input_data, 'result': result, 'process_time': process_time})
 
 if __name__ == '__main__':
     app.run(debug=True)  # デバッグモードを有効にする。本番環境では無効にしてください。
