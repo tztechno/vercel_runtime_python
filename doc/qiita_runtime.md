@@ -1,14 +1,16 @@
 
-Pythonのコードと入力データをサーバーに送信し、結果や実行時間を表示する簡単なWebインターフェースを設定しています。
+
+## はじめに
+Pythonのコードと入力データをサーバーに送信し、計算結果と実行時間を表示する簡単なWebインターフェースを設定しています。
 Pythonコードは、AtCoderのPython提出コードの形式を想定しており、結果出力はprintで行います。
 
 ## templates/index.html
-HTMLの構造
+### HTMLの構造
 ユーザーがPythonのコードと入力データを入力できるテキストエリアがあります。
 ボタンをクリックすると、このデータがサーバーに送信されます。
 計算結果および実行時間がページに表示されます。 
 
-JavaScriptの機能
+### JavaScriptの機能
 sendRequest関数は、テキストエリアから入力データとPythonのコードを取得します。
 ```
 function sendRequest() {
@@ -31,10 +33,10 @@ document.getElementById('time').innerText = `Time: ${(data.process_time / 1000).
 ```
 templates/index.html
 
-index.py
+## index.py
 Flaskアプリケーションのコードは、Pythonのコードを実行し、その結果を返すAPIエンドポイントを設定しています。
 
-主な機能
+### 主な機能
 index エンドポイント
 / にアクセスすると index.html を返します。
 ```
@@ -194,10 +196,12 @@ def calculate():
         
         # タイマーをリセット
         signal.alarm(0)
+
     except TimeoutException as e:
         # Reset stdout in case of a timeout
         sys.stdout = sys.__stdout__
         return jsonify({'error': str(e), 'result': '処理が9秒を超えたため強制終了しました', 'process_time': 9000}), 200
+
     except Exception as e:
         # Reset stdout in case of an exception
         sys.stdout = sys.__stdout__
