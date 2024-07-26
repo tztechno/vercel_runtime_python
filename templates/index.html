@@ -17,6 +17,8 @@
             flex: 1;
             border-left: 1px solid #ccc;
             padding-left: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -33,18 +35,27 @@ print(n*n)
             <p>Enter your input (multiple lines allowed):</p>
             <textarea id="inputData" rows="5" cols="50" placeholder="Enter input data"></textarea>
             <button onclick="sendRequest()">Calculate</button><br><br>
+            <div id="currentResult"></div>
             <div id="error" style="color: red;"></div>
         </div>
         <div class="right-panel">
-            <h2>Session Attributes</h2>
-            <h3>Input Data:</h3>
-            <pre id="sessionInputData">{{ session.get('input_data', '') }}</pre>
-            <h3>Function Code:</h3>
-            <pre id="sessionFunctionCode">{{ session.get('function_code', '') }}</pre>
-            <h3>Result:</h3>
-            <pre id="sessionResult">{{ session.get('result', '') }}</pre>
-            <h3>Process Time:</h3>
-            <pre id="sessionTime">{{ session.get('process_time', '') }} ms</pre>
+            <h2>Calculation History</h2>
+            <div id="history">
+                {% for item in history|reverse %}
+                <div class="history-item">
+                    <h3>Calculation #{{ loop.revindex }}</h3>
+                    <h4>Input Data:</h4>
+                    <pre>{{ item.input_data }}</pre>
+                    <h4>Function Code:</h4>
+                    <pre>{{ item.function_code }}</pre>
+                    <h4>Result:</h4>
+                    <pre>{{ item.result }}</pre>
+                    <h4>Process Time:</h4>
+                    <pre>{{ item.process_time }} ms</pre>
+                    <hr>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
@@ -64,11 +75,31 @@ print(n*n)
                     if (data.error) {
                         document.getElementById('error').innerText = `Error: ${data.error}`;
                     } else {
-                        document.getElementById('sessionInputData').innerText = data.input_data;
-                        document.getElementById('sessionFunctionCode').innerText = data.function_code;
-                        document.getElementById('sessionResult').innerText = data.result;
-                        document.getElementById('sessionTime').innerText = `${data.process_time} ms`;
+                        const current = data.current_result;
+                        document.getElementById('currentResult').innerHTML = `
+                        <h3>Current Result:</h3>
+                        <pre>Input Data: ${current.input_data}</pre>
+                        <pre>Result: ${current.result}</pre>
+                        <pre>Process Time: ${current.process_time} ms</pre>
+                    `;
                         document.getElementById('error').innerText = '';
+
+                        // Update history
+                        const historyHtml = data.history.reverse().map((item, index) => `
+                        <div class="history-item">
+                            <h3>Calculation #${data.history.length - index}</h3>
+                            <h4>Input Data:</h4>
+                            <pre>${item.input_data}</pre>
+                            <h4>Function Code:</h4>
+                            <pre>${item.function_code}</pre>
+                            <h4>Result:</h4>
+                            <pre>${item.result}</pre>
+                            <h4>Process Time:</h4>
+                            <pre>${item.process_time} ms</pre>
+                            <hr>
+                        </div>
+                    `).join('');
+                        document.getElementById('history').innerHTML = historyHtml;
                     }
                 })
                 .catch(error => {
