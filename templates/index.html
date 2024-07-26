@@ -29,8 +29,14 @@
         <div class="left-panel">
             <p>Define your function:</p>
             <textarea id="functionCode" rows="10" cols="50">
-n = int(input())
-print(n*n)
+def fibonacci(n):
+  if n <= 1: 
+    return n 
+  else: 
+    return fibonacci(n-1) + fibonacci(n-2) 
+
+n=int(input()) 
+print(fibonacci(n))
             </textarea>
             <p>Enter your input (multiple lines allowed):</p>
             <textarea id="inputData" rows="5" cols="50" placeholder="Enter input data"></textarea>
