@@ -3,22 +3,50 @@
 
 <head>
     <title>Python Run Time Calculator</title>
+    <style>
+        .container {
+            display: flex;
+        }
+
+        .left-panel {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .right-panel {
+            flex: 1;
+            border-left: 1px solid #ccc;
+            padding-left: 20px;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Python Run Time Calculator</h1>
-    <p>Define your function:</p>
-    <textarea id="functionCode" rows="10" cols="50">
+    <div class="container">
+        <div class="left-panel">
+            <p>Define your function:</p>
+            <textarea id="functionCode" rows="10" cols="50">
 n = int(input())
 print(n*n)
-    </textarea>
-    <p>Enter your input (multiple lines allowed):</p>
-    <textarea id="inputData" rows="5" cols="50" placeholder="Enter input data"></textarea>
-    <button onclick="sendRequest()">Calculate</button><br><br>
-    <div id="inputDisplay"></div>
-    <div id="result"></div>
-    <div id="time"></div>
-    <div id="error" style="color: red;"></div>
+            </textarea>
+            <p>Enter your input (multiple lines allowed):</p>
+            <textarea id="inputData" rows="5" cols="50" placeholder="Enter input data"></textarea>
+            <button onclick="sendRequest()">Calculate</button><br><br>
+            <div id="error" style="color: red;"></div>
+        </div>
+        <div class="right-panel">
+            <h2>Session Attributes</h2>
+            <h3>Input Data:</h3>
+            <pre id="sessionInputData">{{ session.get('input_data', '') }}</pre>
+            <h3>Function Code:</h3>
+            <pre id="sessionFunctionCode">{{ session.get('function_code', '') }}</pre>
+            <h3>Result:</h3>
+            <pre id="sessionResult">{{ session.get('result', '') }}</pre>
+            <h3>Process Time:</h3>
+            <pre id="sessionTime">{{ session.get('process_time', '') }} ms</pre>
+        </div>
+    </div>
 
     <script>
         function sendRequest() {
@@ -36,9 +64,10 @@ print(n*n)
                     if (data.error) {
                         document.getElementById('error').innerText = `Error: ${data.error}`;
                     } else {
-                        document.getElementById('inputDisplay').innerText = `Input:\n${data.inputData}`;
-                        document.getElementById('result').innerText = `Result:\n${data.result}`;
-                        document.getElementById('time').innerText = `Time: ${(data.process_time / 1000).toFixed(3)} sec`;
+                        document.getElementById('sessionInputData').innerText = data.input_data;
+                        document.getElementById('sessionFunctionCode').innerText = data.function_code;
+                        document.getElementById('sessionResult').innerText = data.result;
+                        document.getElementById('sessionTime').innerText = `${data.process_time} ms`;
                         document.getElementById('error').innerText = '';
                     }
                 })
