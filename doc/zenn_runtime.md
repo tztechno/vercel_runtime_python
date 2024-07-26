@@ -1,12 +1,57 @@
 # flaskを用いて、計算式もfrontから入力してbackでの計算に用いる
 
 ## はじめに
-これまでfrontで入力した値をAjax通信を利用してbackで計算させるアプリを作ってきましたが、アプリ使用時、backに記載された計算式は固定で変えられないという宿命がありました。
-今回flaskを用いて、計算式もfrontから入力してbackでの計算に用いることに挑戦しました。
-入力する計算式のコードはPython限定です。AtCoderの提出コードの形式がそのまま使えるようにしています。
-したがって入力値を受け取るコード、結果はprintで出力が必要です。
+frontから値と計算式を入力して、backで入力した計算式で計算させるアプリを作成しました。
+入力する計算式はPython限定です。AtCoder問題の入力値、提出コードの形式がそのまま使えるようにしています。
+
+## ファイル構造
 
 
+## 入出サンプル
+サンプル計算式
+```
+def fibonacci(n):
+  if n <= 1: 
+    return n 
+  else: 
+    return fibonacci(n-1) + fibonacci(n-2) 
+
+n=int(input()) 
+print(fibonacci(n))
+```
+サンプル入力値
+```
+10
+```
+サンプル結果
+```
+Current Result:
+Input Data: 10
+Result: 55
+Process Time: 0.3268718719482422 ms
+```
+
+```
+Calculation History
+Calculation #1
+Input Data:
+10
+Function Code:
+def fibonacci(n):
+  if n <= 1: 
+    return n 
+  else: 
+    return fibonacci(n-1) + fibonacci(n-2) 
+
+n=int(input()) 
+print(fibonacci(n))
+            
+Result:
+55
+Process Time:
+0.3268718719482422 ms
+
+```
 ## templates/index.html
 ```
 <!DOCTYPE html>
