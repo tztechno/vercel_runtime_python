@@ -48,10 +48,12 @@ def calculate():
         
         # タイマーをリセット
         signal.alarm(0)
+
     except TimeoutException as e:
         # Reset stdout in case of a timeout
         sys.stdout = sys.__stdout__
         return jsonify({'error': str(e), 'result': '処理が9秒を超えたため強制終了しました', 'process_time': 9000}), 200
+    
     except Exception as e:
         # Reset stdout in case of an exception
         sys.stdout = sys.__stdout__
