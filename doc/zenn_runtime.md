@@ -1,13 +1,15 @@
-# flaskを用いて、計算式もfrontから入力してbackでの計算に用いる
+# フロントから入力した値と計算式を用いてバックエンドで計算させるアプリ
 
 ## はじめに
-frontから値と計算式を入力して、backで入力した計算式で計算させるアプリを作成しました。
-入力する計算式はPython限定です。AtCoder問題の入力値、提出コードの形式がそのまま使えるようにしています。
+フロントから入力した値と計算式を用いてバックエンドで計算させるflaskアプリを作成しました。
 
-## ファイル構造
+## 機能
+フロントから値と計算式を入力して、ボタンを押すと計算結果、計算時間が表示される(Current Result)。
+入力する計算式はPython限定で、AtCoder問題の入力値、提出コードの形式がそのまま使える。
+繰り返し実行すると、結果履歴がスクロール表示されます(Calculation History)。
+処理が9秒を超えたた場合は強制終了となります(Vercelの実行制限時間範囲内で終了させるため)。
 
-
-## 入出サンプル
+## 入出力サンプル
 サンプル計算式
 ```
 def fibonacci(n):
@@ -34,8 +36,10 @@ Process Time: 0.3268718719482422 ms
 ```
 Calculation History
 Calculation #1
+
 Input Data:
 10
+
 Function Code:
 def fibonacci(n):
   if n <= 1: 
@@ -48,11 +52,46 @@ print(fibonacci(n))
             
 Result:
 55
+
 Process Time:
 0.3268718719482422 ms
 
 ```
 ## templates/index.html
+
+### 機能概要
+
+#### HTMLとCSS
+
+- **タイトル**: 「Python Run Time Calculator」
+- **レイアウト**: Flexboxで左右のパネルに分かれています。
+
+#### 左パネル
+
+- **関数定義**:
+  - Pythonの関数コードを入力するためのテキストエリア（初期設定はフィボナッチ関数）。
+
+- **入力データ**:
+  - 関数に渡す入力値を入力するテキストエリア。
+
+- **計算ボタン**:
+  - 計算を行うためのボタン。
+
+- **結果表示**:
+  - 現在の計算結果やエラーを表示する領域。
+
+#### 右パネル
+
+- **計算履歴**:
+  - 過去の計算結果を表示。入力データ、関数コード、結果、処理時間が含まれる。
+  - テンプレート構文でサーバーから動的に履歴を表示。
+
+#### JavaScript機能
+
+- **`sendRequest()`**:
+  - Fetch APIで`/calculate`にPOSTリクエストを送り、計算を実行。
+  - 結果やエラーを更新し、履歴を表示。
+
 ```
 <!DOCTYPE html>
 <html>
@@ -176,6 +215,67 @@ print(fibonacci(n))
 ```
 
 ## index.py
+Certainly! Here's an explanation of the backend code in Japanese:
+
+### 概要
+
+このコードは、Flaskを使ってPythonコードの実行時間を計測し、結果を表示するウェブアプリケーションのバックエンドです。
+
+### 主な機能
+
+#### インポートと初期設定
+
+- **Flaskとモジュールのインポート**:
+  - `Flask`, `render_template`, `request`, `jsonify`, `session`をインポートします。
+  - `time`, `traceback`, `sys`, `io`, `signal`も使用。
+
+- **Flaskアプリケーションの初期化**:
+  - `app = Flask(__name__)`
+  - セッションのためのシークレットキーを設定。
+
+#### タイムアウト処理
+
+- **`TimeoutException`クラス**:
+  - 9秒を超えた処理を中断するための例外。
+
+- **`timeout_handler`関数**:
+  - タイムアウトが発生した場合に`TimeoutException`を発生させる。
+
+#### ルーティング
+
+- **`/`エンドポイント**:
+  - 初期ページを表示し、セッションに履歴がなければ新規作成。
+
+- **`/calculate`エンドポイント**:
+  - POSTリクエストで受け取ったPythonコードを実行。
+
+#### 計算処理
+
+1. **タイムアウト設定**:
+   - `signal.signal`と`signal.alarm`を使って9秒のタイムアウトを設定。
+
+2. **コード実行**:
+   - `io.StringIO`で標準出力をキャプチャし、`exec`を使ってコードを実行。
+
+3. **結果取得**:
+   - キャプチャした出力を結果として取得。
+
+4. **例外処理**:
+   - タイムアウトや他の例外をキャッチし、適切に処理。
+
+5. **履歴更新**:
+   - 新しい計算結果をセッションの履歴に追加。
+
+#### JSONレスポンス
+
+- **現在の結果と履歴**をJSON形式で返す。
+
+#### アプリケーション実行
+
+- `app.run(debug=True)`でデバッグモードでアプリを実行。
+
+このコードは、ユーザーが送信したPythonコードをサーバーで実行し、その結果と処理時間をフロントエンドに返します。また、セッションを使用して計算履歴を管理します。
+
 ```
 from flask import Flask, render_template, request, jsonify, session
 import time
@@ -263,11 +363,9 @@ if __name__ == '__main__':
     app.run(debug=True)
 ```
 
-
 ## 終わりに
-完成品はVercelにアップしました。
+Vercelにアップしました。
 https://vercel-runtime-python.vercel.app/
-フロントの右側に計算結果のHistoryがスクロール表示させる機能が付いています。
-Vercelの実行制限時間範囲内で終了させるため、処理が9秒を超えたた場合は強制終了となります。
+
 
 
