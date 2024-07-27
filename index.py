@@ -6,7 +6,7 @@ import io
 import signal
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
+app.secret_key = os.environ.get('SECRET_KEY', 'デフォルトの秘密鍵')
 
 class TimeoutException(Exception):
     pass
