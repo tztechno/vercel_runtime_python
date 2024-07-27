@@ -59,11 +59,12 @@ Process Time:
 ```
 ## templates/index.html
 
+Flaskを使ってPythonコードの実行時間を計測し、結果を表示するウェブアプリケーションのフロントです。
+
 ### 機能概要
 
 #### HTMLとCSS
 
-- **タイトル**: 「Python Run Time Calculator」
 - **レイアウト**: Flexboxで左右のパネルに分かれています。
 
 #### 左パネル
@@ -92,7 +93,9 @@ Process Time:
   - Fetch APIで`/calculate`にPOSTリクエストを送り、計算を実行。
   - 結果やエラーを更新し、履歴を表示。
 
+ユーザーはPython関数を定義し、データを入力して計算を実行し、履歴として結果を確認できます。
 ```
+
 <!DOCTYPE html>
 <html>
 
@@ -215,19 +218,12 @@ print(fibonacci(n))
 ```
 
 ## index.py
-Certainly! Here's an explanation of the backend code in Japanese:
 
-### 概要
+Flaskを使ってPythonコードの実行時間を計測し、結果を表示するウェブアプリケーションのバックエンドです。
 
-このコードは、Flaskを使ってPythonコードの実行時間を計測し、結果を表示するウェブアプリケーションのバックエンドです。
+### 機能概要
 
-### 主な機能
-
-#### インポートと初期設定
-
-- **Flaskとモジュールのインポート**:
-  - `Flask`, `render_template`, `request`, `jsonify`, `session`をインポートします。
-  - `time`, `traceback`, `sys`, `io`, `signal`も使用。
+#### 初期設定
 
 - **Flaskアプリケーションの初期化**:
   - `app = Flask(__name__)`
